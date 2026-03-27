@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vercel 部署测试 | 欢迎页面</title>
+    <title>GitHub + Vercel 自动化部署指南 | 零配置部署教程</title>
     <style>
         * {
             margin: 0;
@@ -13,73 +13,312 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            padding: 2rem;
             position: relative;
             overflow-x: hidden;
         }
 
-        /* 动态背景装饰 */
+        /* 动态背景 */
         body::before {
             content: '';
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
-            background-size: 50px 50px;
-            animation: moveGrid 20s linear infinite;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 25% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
             pointer-events: none;
         }
 
-        @keyframes moveGrid {
-            0% {
-                transform: translate(0, 0);
-            }
-            100% {
-                transform: translate(50px, 50px);
-            }
-        }
-
-        /* 浮动粒子效果 */
-        .particle {
-            position: absolute;
-            background: rgba(255,255,255,0.3);
-            border-radius: 50%;
-            pointer-events: none;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0) rotate(0deg);
-            }
-            50% {
-                transform: translateY(-20px) rotate(180deg);
-            }
-        }
-
-        /* 主卡片 */
-        .card {
+        /* 主容器 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
             position: relative;
             z-index: 10;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 2rem;
-            padding: 3rem 4rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            text-align: center;
-            max-width: 90%;
-            width: 600px;
-            animation: fadeInUp 0.8s ease-out;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .card:hover {
+        /* 头部 */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .badge-group {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .badge-icon {
+            font-size: 1.2rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #94a3b8;
+            margin-bottom: 2rem;
+        }
+
+        /* 流程卡片 */
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .step-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.8s ease;
+            animation-fill-mode: both;
+        }
+
+        .step-card:nth-child(1) { animation-delay: 0.1s; }
+        .step-card:nth-child(2) { animation-delay: 0.3s; }
+        .step-card:nth-child(3) { animation-delay: 0.5s; }
+        .step-card:nth-child(4) { animation-delay: 0.7s; }
+
+        .step-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(96, 165, 250, 0.5);
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .step-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-desc {
+            color: #94a3b8;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .code-block {
+            background: #0f172a;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            color: #60a5fa;
+            overflow-x: auto;
+            border-left: 3px solid #3b82f6;
+        }
+
+        /* 命令展示区 */
+        .commands {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .command-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .command-item {
+            background: #0f172a;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .command-item:hover {
+            transform: translateX(5px);
+            background: #1e293b;
+        }
+
+        .command-prompt {
+            color: #10b981;
+            font-weight: 600;
+            min-width: 60px;
+        }
+
+        .command-text {
+            color: #fbbf24;
+            font-family: monospace;
+            flex: 1;
+        }
+
+        .copy-btn {
+            background: rgba(59, 130, 246, 0.3);
+            border: none;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .copy-btn:hover {
+            background: #3b82f6;
+        }
+
+        /* 特性展示 */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            color: white;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-desc {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        /* 部署状态 */
+        .deploy-status {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid rgba(96, 165, 250, 0.3);
+            margin-top: 2rem;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(16, 185, 129, 0.2);
+            border-radius: 50px;
+            margin-bottom: 1rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .deploy-url {
+            font-size: 1.1rem;
+            color: #60a5fa;
+            font-family: monospace;
+            margin: 1rem 0;
+        }
+
+        /* 页脚 */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        /* 动画 */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @keyframes fadeInUp {
@@ -93,263 +332,257 @@
             }
         }
 
-        /* 图标 */
-        .icon {
-            font-size: 5rem;
-            margin-bottom: 1.5rem;
-            animation: bounce 2s ease-in-out infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-
-        /* 标题 */
-        h1 {
-            font-size: 2.5rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 1rem;
-            font-weight: 700;
-        }
-
-        /* 装饰下划线 */
-        .underline {
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            margin: 1rem auto;
-            border-radius: 2px;
-        }
-
-        /* 内容文字 */
-        .message {
-            font-size: 1.2rem;
-            color: #4a5568;
-            margin: 1.5rem 0;
-            line-height: 1.6;
-        }
-
-        /* 状态徽章 */
-        .badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 0.5rem 1.2rem;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin: 1rem 0;
-            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
-        }
-
-        /* 信息网格 */
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin: 2rem 0;
-        }
-
-        .info-item {
-            background: #f7fafc;
-            padding: 1rem;
-            border-radius: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .info-item:hover {
-            background: #edf2f7;
-            transform: scale(1.05);
-        }
-
-        .info-label {
-            font-size: 0.8rem;
-            color: #718096;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 0.5rem;
-        }
-
-        .info-value {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #2d3748;
-        }
-
-        /* 按钮 */
-        .btn {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 0.8rem 2rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            margin-top: 1rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
-        }
-
-        /* 页脚 */
-        .footer {
-            margin-top: 2rem;
-            font-size: 0.8rem;
-            color: #a0aec0;
-        }
-
-        /* 响应式设计 */
-        @media (max-width: 640px) {
-            .card {
-                padding: 2rem 1.5rem;
-                width: 90%;
+        /* 响应式 */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
             }
             
             h1 {
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
             
-            .message {
+            .subtitle {
                 font-size: 1rem;
             }
             
-            .info-grid {
-                grid-template-columns: 1fr;
+            .command-item {
+                flex-wrap: wrap;
             }
         }
 
-        /* 成功状态标记 */
-        .success-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
-            animation: pulse 2s ease-in-out infinite;
+        /* 滚动条 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
 
-        .success-icon::before {
-            content: '✓';
-            font-size: 2.5rem;
-            color: white;
-            font-weight: bold;
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
         }
 
-        @keyframes pulse {
-            0%, 100% {
-                box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4);
-            }
-            50% {
-                box-shadow: 0 0 0 20px rgba(102, 126, 234, 0);
-            }
+        ::-webkit-scrollbar-thumb {
+            background: #3b82f6;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
-    <!-- 动态粒子效果 -->
-    <div id="particles"></div>
-
-    <div class="card">
-        <div class="success-icon"></div>
-        
-        <h1>🎉 部署成功！</h1>
-        <div class="underline"></div>
-        
-        <div class="badge">
-            ✨ 已通过 Vercel + GitHub 自动部署 ✨
-        </div>
-        
-        <div class="message">
-            🚀 恭喜！你的静态页面已经成功部署到 Vercel<br>
-            每次推送代码到 GitHub，都会自动触发部署更新
-        </div>
-
-        <div class="info-grid">
-            <div class="info-item">
-                <div class="info-label">部署平台</div>
-                <div class="info-value">Vercel</div>
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <div class="badge-group">
+                <div class="badge">
+                    <span class="badge-icon">📦</span>
+                    GitHub
+                </div>
+                <div class="badge">
+                    <span class="badge-icon">⚡</span>
+                    +
+                </div>
+                <div class="badge">
+                    <span class="badge-icon">▲</span>
+                    Vercel
+                </div>
+                <div class="badge">
+                    <span class="badge-icon">🚀</span>
+                    零配置自动部署 郭诗婷教学
+                </div>
             </div>
-            <div class="info-item">
-                <div class="info-label">代码仓库</div>
-                <div class="info-value">GitHub</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">部署时间</div>
-                <div class="info-value" id="deployTime"></div>
+            <h1>GitHub + Vercel</h1>
+            <div class="subtitle">
+                自动化部署流程 · 无需编写 CI/CD 配置文件
             </div>
         </div>
 
-        <button class="btn" onclick="showMessage()">
-            🎯 点击测试交互
-        </button>
+        <!-- 部署步骤 -->
+        <div class="steps">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <div class="step-title">📝 准备代码仓库</div>
+                <div class="step-desc">
+                    将你的项目代码推送到 GitHub 仓库，支持任何静态网站或前端框架
+                </div>
+                <div class="code-block">
+                    git init<br>
+                    git add .<br>
+                    git commit -m "first commit"<br>
+                    git push -u origin main
+                </div>
+            </div>
 
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <div class="step-title">🔗 连接 Vercel</div>
+                <div class="step-desc">
+                    访问 vercel.com，使用 GitHub 账号登录，授权访问你的仓库
+                </div>
+                <div class="code-block">
+                    👉 vercel.com<br>
+                    👉 Sign up with GitHub<br>
+                    👉 选择 "Only select repositories"
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <div class="step-title">⚙️ 导入项目</div>
+                <div class="step-desc">
+                    在 Vercel 中点击 "Add New Project"，选择你的 GitHub 仓库，点击 Deploy
+                </div>
+                <div class="code-block">
+                    自动识别框架 → 自动构建 → 自动部署<br>
+                    无需任何配置！✨
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <div class="step-title">🎉 自动部署生效</div>
+                <div class="step-desc">
+                    以后每次 git push，Vercel 都会自动重新部署，无需任何手动操作
+                </div>
+                <div class="code-block">
+                    git push → 自动构建 → 自动部署 → 实时更新 ✨
+                </div>
+            </div>
+        </div>
+
+        <!-- 常用命令 -->
+        <div class="commands">
+            <div class="section-title">
+                💻 常用 Git 命令
+            </div>
+            <div class="command-list">
+                <div class="command-item" id="cmd1">
+                    <div class="command-prompt">$</div>
+                    <div class="command-text">git add .</div>
+                    <button class="copy-btn" onclick="copyCommand('cmd1')">复制</button>
+                </div>
+                <div class="command-item" id="cmd2">
+                    <div class="command-prompt">$</div>
+                    <div class="command-text">git commit -m "更新说明"</div>
+                    <button class="copy-btn" onclick="copyCommand('cmd2')">复制</button>
+                </div>
+                <div class="command-item" id="cmd3">
+                    <div class="command-prompt">$</div>
+                    <div class="command-text">git push</div>
+                    <button class="copy-btn" onclick="copyCommand('cmd3')">复制</button>
+                </div>
+                <div class="command-item" id="cmd4">
+                    <div class="command-prompt">$</div>
+                    <div class="command-text">git status  # 查看当前状态</div>
+                    <button class="copy-btn" onclick="copyCommand('cmd4')">复制</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 核心特性 -->
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🎯</div>
+                <div class="feature-title">零配置部署</div>
+                <div class="feature-desc">无需编写 GitHub Actions 或任何 CI 配置文件</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🔄</div>
+                <div class="feature-title">自动更新</div>
+                <div class="feature-desc">每次 git push 自动触发重新部署</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🌐</div>
+                <div class="feature-title">全球 CDN</div>
+                <div class="feature-desc">自动分发到全球节点，访问速度快</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🔒</div>
+                <div class="feature-title">免费 SSL</div>
+                <div class="feature-desc">自动签发 HTTPS 证书，安全加密</div>
+            </div>
+        </div>
+
+        <!-- 部署状态 -->
+        <div class="deploy-status">
+            <div class="status-indicator">
+                <div class="status-dot"></div>
+                <span style="color: #10b981;">自动部署已启用</span>
+            </div>
+            <div class="deploy-url">
+                🌐 当前页面由 Vercel 自动部署<br>
+                <span style="font-size: 0.9rem; color: #94a3b8;">
+                    最后部署时间: <span id="deployTime"></span>
+                </span>
+            </div>
+            <div style="margin-top: 1rem; color: #94a3b8; font-size: 0.9rem;">
+                💡 提示：修改此文件后执行 git push，页面将自动更新
+            </div>
+        </div>
+
+        <!-- 页脚 -->
         <div class="footer">
-            <p>💡 提示：修改这个文件后，执行 git push，Vercel 会自动重新部署</p>
-            <p style="margin-top: 0.5rem;">Made with ❤️ by Vercel + GitHub</p>
+            <p>✨ 完全不需要编写 GitHub Actions ✨</p>
+            <p style="margin-top: 0.5rem;">Vercel 通过 GitHub Integration 自动处理部署流程</p>
+            <p style="margin-top: 0.5rem;">🚀 推送代码 → 自动构建 → 自动部署 → 实时生效</p>
         </div>
     </div>
 
     <script>
-        // 显示当前部署时间
-        document.getElementById('deployTime').innerText = new Date().toLocaleString('zh-CN');
+        // 显示部署时间
+        const deployTime = new Date().toLocaleString('zh-CN', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+        document.getElementById('deployTime').innerText = deployTime;
 
-        // 添加粒子效果
-        function createParticles() {
-            const container = document.getElementById('particles');
-            const particleCount = 30;
+        // 复制命令功能
+        function copyCommand(cmdId) {
+            const cmdElement = document.getElementById(cmdId);
+            const commandText = cmdElement.querySelector('.command-text').innerText;
             
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                const size = Math.random() * 8 + 2;
-                particle.style.width = size + 'px';
-                particle.style.height = size + 'px';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.top = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 5 + 's';
-                particle.style.animationDuration = Math.random() * 4 + 4 + 's';
-                container.appendChild(particle);
+            // 移除开头的提示符和结尾的复制按钮文字
+            let textToCopy = commandText;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                // 显示复制成功提示
+                const btn = cmdElement.querySelector('.copy-btn');
+                const originalText = btn.innerText;
+                btn.innerText = '✓ 已复制';
+                btn.style.background = '#10b981';
+                
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.style.background = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('复制失败:', err);
+                alert('复制失败，请手动复制');
+            });
+        }
+
+        // 控制台输出欢迎信息
+        console.log('%c🚀 GitHub + Vercel 自动化部署演示页面', 'color: #60a5fa; font-size: 16px; font-weight: bold;');
+        console.log('%c✅ 每次 git push 都会自动触发 Vercel 重新部署', 'color: #10b981; font-size: 14px;');
+        console.log('%c💡 完全不需要编写 GitHub Actions 配置文件！', 'color: #fbbf24; font-size: 14px;');
+        
+        // 添加键盘快捷键提示
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'g') {
+                e.preventDefault();
+                window.open('https://github.com', '_blank');
+            } else if (e.ctrlKey && e.key === 'v') {
+                e.preventDefault();
+                window.open('https://vercel.com', '_blank');
             }
-        }
-
-        // 交互提示
-        function showMessage() {
-            alert('🎉 Vercel 自动部署测试成功！\n\n你的页面已经成功上线，每次 git push 都会自动更新。');
-            
-            // 添加一个简单的点击反馈效果
-            const btn = document.querySelector('.btn');
-            btn.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                btn.style.transform = '';
-            }, 200);
-        }
+        });
 
         // 页面加载动画
         window.addEventListener('load', () => {
-            createParticles();
-            console.log('✅ Vercel 部署成功！页面已加载');
+            console.log('🎉 页面加载完成！Vercel 自动部署成功');
         });
-
-        // 添加控制台彩蛋
-        console.log('%c🚀 Vercel + GitHub 自动部署成功！', 'color: #667eea; font-size: 16px; font-weight: bold;');
-        console.log('%c每次 git push 都会自动触发部署更新', 'color: #764ba2; font-size: 14px;');
     </script>
 </body>
 </html>
